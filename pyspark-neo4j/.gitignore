@@ -1,0 +1,26 @@
+# maven / sbt
+target
+.cache*
+
+# python
+*.pyc
+venv*
+deps/
+
+# eclipse
+.classpath
+.project
+.pydevproject
+.settings
+
+#testing
+lib
+metastore_db
+/bin/
+.sp-creds.txt
+*.ipynb
+
+.idea
+pyspark-neo4j.iml
+src/main/scala/scala.iml
+/.tox/

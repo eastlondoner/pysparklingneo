@@ -1,0 +1,6 @@
+*.tsv
+*.csv
+*.py
+data/
+dist/
+neodata/
