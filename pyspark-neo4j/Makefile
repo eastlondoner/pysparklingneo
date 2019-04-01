@@ -18,6 +18,7 @@ clean-dist:
 	rm -rf python/*.egg-info
 	rm -rf .tox
 	rm -rf venv
+	rm -rf deps
 
 install-venv:
 	test -d venv || virtualenv -p python3 venv

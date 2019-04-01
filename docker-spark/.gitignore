@@ -4,3 +4,4 @@
 data/
 dist/
 neodata/
+docker-compose.yml
