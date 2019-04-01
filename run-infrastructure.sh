@@ -6,7 +6,7 @@ DOCKER_IMAGE_NAME=mysparkimage
 
 pushd docker-spark
   docker build . -t "${DOCKER_IMAGE_NAME}"
-  DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" yq '.services |= with_entries(if .key == "neo4j" then . else .value.image |= env.DOCKER_IMAGE_NAME end)' docker-compose.yml.template > docker-compose.yml
+  cat docker-compose.yml.template | DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" envsubst  > docker-compose.yml
   docker-compose up
 popd
 
