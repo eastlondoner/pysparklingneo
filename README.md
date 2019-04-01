@@ -20,6 +20,16 @@ Then in another terminal:
 ./pyspark.sh pyspark-jobs/count-first-names.py
 ```
 
+## Dependencies
+
+### Python
+ - virtualenv
+
+### Java/Scala
+ - scala 2.12
+ - sbt
+ 
+
 
 ## Contents
 

@@ -22,7 +22,7 @@ spName := "eastlondoner/pyspark-neo4j"
 sparkVersion := "2.4.0"
 
 sparkComponents ++= Seq("core", "streaming", "sql")
-javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
+javacOptions ++= Seq("-source", "11.0", "-target", "11.0")
 
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(
   includeScala = false

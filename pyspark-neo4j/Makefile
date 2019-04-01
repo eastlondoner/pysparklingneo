@@ -20,7 +20,7 @@ clean-dist:
 	rm -rf venv
 
 install-venv:
-	test -d venv || virtualenv venv
+	test -d venv || virtualenv -p python3 venv
 	
 install-neo4j-driver: install-venv
 	venv/bin/pip install neo4j
