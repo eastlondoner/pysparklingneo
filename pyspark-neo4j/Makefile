@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 VERSION = $(shell cat version.txt)
-SCALA_TARGET_VERSION=2.11
+SCALA_TARGET_VERSION=2.12
 
 .PHONY: clean clean-pyc clean-dist dist test-travis
 
@@ -64,7 +64,7 @@ define test-integration-for-version
 	echo ======================================================================
 endef
 
-dist: clean-pyc
+dist: clean-pyc install-venv
 	sbt -batch assembly
 	cd . ; \
     ./venv/bin/pip install -r ./python/deps.txt -t ./deps ; \

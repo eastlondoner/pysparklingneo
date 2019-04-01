@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
-pushd pyspark-neo
+
+set -e
+
+pushd pyspark-neo4j
   make dist
 popd

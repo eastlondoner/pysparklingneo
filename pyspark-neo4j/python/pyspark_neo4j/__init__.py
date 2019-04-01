@@ -23,18 +23,19 @@ import pyspark.rdd
 
 from .conf import ReadConf
 from .context import Neo4jSparkContext, monkey_patch_sc
+from .spark_cypher_session import SparkCypherSession
 from .rdd import saveToNeo4j, joinWithNeo4jTable, deleteFromNeo4j
 from .types import Row, UDT
 
 __all__ = [
+    "SparkCypherSession",
     "Neo4jSparkContext",
     "ReadConf",
     "Row",
     "UDT",
 ]
 
-# Monkey patch the default python RDD so that it can be stored to neo4j as
-# CQL rows
+# Monkey patch the default python RDD so that it can be stored to neo4j
 
 pyspark.rdd.RDD.saveToNeo4j = saveToNeo4j
 pyspark.rdd.RDD.joinWithNeo4jTable = joinWithNeo4jTable

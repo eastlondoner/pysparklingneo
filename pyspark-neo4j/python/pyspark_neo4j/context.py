@@ -13,15 +13,28 @@
 from functools import partial
 
 import pyspark.context
+from py4j.java_gateway import java_import
+
 from .rdd import Neo4jCypherRDD
+from .neo4j_config import Neo4jConfig
 
 def monkey_patch_sc(sc):
+    print("monkey patching")
     sc.__class__ = Neo4jSparkContext
     sc.__dict__["neo4jTable"] = partial(
         Neo4jSparkContext.neo4jTable, sc)
     sc.__dict__["neo4jTable"].__doc__ = \
         Neo4jSparkContext.neo4jTable.__doc__
 
+    java_import(sc._gateway.jvm, "org.opencypher.spark.api.io.*")
+    java_import(sc._gateway.jvm, "org.opencypher.spark.api.CAPSSession")
+    java_import(sc._gateway.jvm, "org.opencypher.okapi.neo4j.io.Neo4jConfig")
+    java_import(sc._gateway.jvm, "org.opencypher.spark.api.GraphSources")
+
+    sc.__dict__["neo4jConfig"] = partial(
+        Neo4jSparkContext.neo4jConfig, sc)
+    sc.__dict__["neo4jConfig"].__doc__ = \
+        Neo4jSparkContext.neo4jConfig.__doc__
 
 class Neo4jSparkContext(pyspark.context.SparkContext):
     """Wraps a SparkContext which allows reading from neo4j"""
@@ -29,3 +42,6 @@ class Neo4jSparkContext(pyspark.context.SparkContext):
     def neo4jTable(self, cypher, *args, **kwargs):
         """Returns a Neo4jCypherRDD for the given keyspace and table"""
         return Neo4jCypherRDD(self, cypher, *args, **kwargs)
+
+    def neo4jConfig(self, uri, username, password, encrypted=True):
+        return Neo4jConfig(self, uri, username, password, encrypted)

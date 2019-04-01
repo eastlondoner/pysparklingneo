@@ -6,14 +6,15 @@ version := io.Source.fromFile("version.txt").mkString.trim
 
 organization := "eastlondoner"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.12.8"
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".sbtcredentials")
 
 licenses += "Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0")
 
 libraryDependencies ++= Seq(
-  "net.razorvine" % "pyrolite" % "4.20"
+  "net.razorvine" % "pyrolite" % "4.20",
+  "org.opencypher" % "spark-cypher" % "0.3.1"
 )
 
 spName := "eastlondoner/pyspark-neo4j"
