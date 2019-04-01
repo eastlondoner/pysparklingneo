@@ -1,6 +1,6 @@
 from pyspark import SparkContext
 
-sc = SparkContext("local", "App Name")
+sc = SparkContext("spark://master:7077", "App Name")
 sc.setLogLevel('WARN')
 
 # import pyspark_neo4j after importing SparkContext

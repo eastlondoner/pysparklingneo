@@ -14,23 +14,45 @@
 
 package pyspark_neo4j
 
-import java.lang.Boolean
-import java.util.{Map => JMap}
-
 import org.apache.spark.api.java.{JavaRDD, JavaSparkContext}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.api.java.JavaDStream
 import org.apache.spark.streaming.dstream.DStream
-import pyspark_util.Conversions._
-import pyspark_util.Pickling._
+import org.opencypher.okapi.neo4j.io.Neo4jConfig
+import org.opencypher.spark.api.{CAPSSession, GraphSources}
+import org.opencypher.spark.api.io.neo4j.Neo4jPropertyGraphDataSource
+import org.opencypher.okapi.relational.api.planning.RelationalCypherResult
+import org.opencypher.spark.impl.table.SparkTable.DataFrameTable
+import org.opencypher.okapi.impl.util.PrintOptions
 
 @SerialVersionUID(1L)
 class PythonHelper() extends Serializable {
 
 
   /* ----------------------------------------------------------------------- */
-  /* loading from cassandra ------------------------------------------------ */
+  /* loading from neo4j ---------------------------------------------------- */
   /* ----------------------------------------------------------------------- */
+
+  def neo4jGraphSource(
+             caps: CAPSSession,
+             config: Neo4jConfig,
+           ): Neo4jPropertyGraphDataSource = {
+    implicit val session: CAPSSession = caps
+    return GraphSources.cypher.neo4j(config)
+  }
+
+
+  /* ----------------------------------------------------------------------- */
+  /* do cypher ------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------- */
+
+  // TODO: figure out if this can use type parameters
+  def runCAPSSessionCypher(
+                        caps: CAPSSession,
+                        query: String,
+                      ): RelationalCypherResult[DataFrameTable] = {
+    return caps.cypher(query)
+  }
 
 
   /* ----------------------------------------------------------------------- */
@@ -76,4 +98,8 @@ class PythonHelper() extends Serializable {
   def javaRDD(rdd: RDD[_]) = JavaRDD.fromRDD(rdd)
 
   def javaDStream(dstream: DStream[_]) = JavaDStream.fromDStream(dstream)
+
+  def printOptions(): PrintOptions = {
+    return PrintOptions.out
+  }
 }

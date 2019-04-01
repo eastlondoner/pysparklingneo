@@ -18,6 +18,15 @@ from time import mktime
 from pyspark_neo4j.types import UDT
 
 
+def as_scala_bloody_optional(gateway, value):
+    return gateway.jvm.scala.Some(value)
+
+def as_java_uri(gateway, uri):
+    """Creates a Java URI from a Python string, using the given p4yj
+    gateway"""
+    return gateway.jvm.java.net.URI(uri)
+
+
 def as_java_array(gateway, java_type, iterable):
     """Creates a Java array from a Python iterable, using the given p4yj
     gateway"""
@@ -74,6 +83,12 @@ def as_java_object(gateway, obj):
         return hash_set
 
     elif issubclass(t, (list, Iterable)):
+        array_list = gateway.jvm.java.util.ArrayList()
+        for e in obj:
+            array_list.append(e)
+        return array_list
+
+    elif issubclass(t, (Uri)):
         array_list = gateway.jvm.java.util.ArrayList()
         for e in obj:
             array_list.append(e)

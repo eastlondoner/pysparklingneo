@@ -53,7 +53,7 @@ services:
       - ./dist:/dist
 
   neo4j:
-    image: ${DOCKER_IMAGE_NAME}
+    image: neo4j:3.5.3-enterprise
     hostname: neo4j
     ports:
       - 7687:7687
