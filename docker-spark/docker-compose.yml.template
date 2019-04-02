@@ -1,10 +1,11 @@
 version: "2.2"
 services:
   master:
-    image: ${DOCKER_IMAGE_NAME}
+    image: ${SPARK_DOCKER_IMAGE}
     command: bin/spark-class org.apache.spark.deploy.master.Master -h master
     hostname: master
     environment:
+      PYTHONPATH: /usr/spark-2.4.0/python:/usr/spark-2.4.0/python/lib/py4j-0.10.7-src.zip:/dist:/dist/pyspark-neo4j-assembly-0.0.1.jar
       MASTER: spark://master:7077
       SPARK_CONF_DIR: /conf
       SPARK_PUBLIC_DNS: localhost
@@ -27,10 +28,11 @@ services:
       - ./dist:/dist
 
   worker:
-    image: ${DOCKER_IMAGE_NAME}
+    image: ${SPARK_DOCKER_IMAGE}
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
     hostname: worker
     environment:
+      PYTHONPATH: /usr/spark-2.4.0/python:/usr/spark-2.4.0/python/lib/py4j-0.10.7-src.zip:/dist:/dist/pyspark-neo4j-assembly-0.0.1.jar
       SPARK_CONF_DIR: /conf
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
@@ -55,6 +57,8 @@ services:
   neo4j:
     image: neo4j:3.5.3-enterprise
     hostname: neo4j
+    expose:
+      - 7687
     ports:
       - 7687:7687
       - 7474:7474
@@ -63,3 +67,19 @@ services:
       NEO4J_ACCEPT_LICENSE_AGREEMENT: 'yes'
     volumes:
       - ./neodata:/data
+
+  jupyter:
+    image: ${JUPYTER_DOCKER_IMAGE_NAME}
+    hostname: jupyter
+    working_dir: /jupyter
+    command: jupyter notebook --allow-root --ip=0.0.0.0
+    environment:
+      PYTHONPATH: /usr/spark-2.4.0/python:/usr/spark-2.4.0/python/lib/py4j-0.10.7-src.zip:/jupyter/dist:/jupyter/dist/pyspark-neo4j-assembly-0.0.1.jar
+      SPARK_OPTS: --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info
+    ports:
+      - 8888:8888
+    expose:
+      - 8888
+    volumes:
+      - ./data:/jupyter/data
+      - ./dist:/jupyter/dist

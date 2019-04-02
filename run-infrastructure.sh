@@ -2,11 +2,18 @@
 
 set -e
 
-DOCKER_IMAGE_NAME=mysparkimage
+SPARK_DOCKER_IMAGE=mysparkimage
+JUPYTER_DOCKER_IMAGE_NAME=myjupyterimage
 
 pushd docker-spark
-  docker build . -t "${DOCKER_IMAGE_NAME}"
-  cat docker-compose.yml.template | DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}" envsubst  > docker-compose.yml
+  docker build . -t "${SPARK_DOCKER_IMAGE}"
+popd
+pushd docker-jupyter
+  docker build --build-arg SPARK_DOCKER_IMAGE="${SPARK_DOCKER_IMAGE}" . -t "${JUPYTER_DOCKER_IMAGE_NAME}"
+popd
+
+pushd docker-spark
+  cat docker-compose.yml.template | JUPYTER_DOCKER_IMAGE_NAME="${JUPYTER_DOCKER_IMAGE_NAME}" SPARK_DOCKER_IMAGE="${SPARK_DOCKER_IMAGE}" envsubst  > docker-compose.yml
   docker-compose up
 popd
 
